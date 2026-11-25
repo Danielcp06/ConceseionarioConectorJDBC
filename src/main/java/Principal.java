@@ -16,10 +16,10 @@ import java.util.List;
 public class Principal {
     public static void main(String[] args) {
 
-        boolean activo = true;
+        boolean usandoBaseDeDatos = true;
 
         // Bucle principal de la aplicación: se mantiene en ejecución hasta que el usuario elija salir (opción 13)
-        while (activo) {
+        while (usandoBaseDeDatos) {
             try {
                 interfaz();
                 int opcion = MiEntradaSalida.leerEnteroRango("Introduce la opcion: ", 1, 13);
@@ -36,7 +36,7 @@ public class Principal {
 
                     case 2:
                         // Creación de tablas adaptada al dialecto SQL activo (y procedimiento almacenado si es MySQL)
-                        GestionBBDD.inicializarTablas();
+                        ConcesionarioService.iniciarTablas();
                         System.out.println("Tablas (y procedimiento si es MySql) inicializadas correctamente");
                         break;
                     case 3:
@@ -47,7 +47,7 @@ public class Principal {
                         String telefono = MiEntradaSalida.leerLinea("Introduce el telefono: ");
 
                         Propietario propietario = new Propietario(dni, nombre, apellidos, telefono);
-                        GestionBBDD.registrarPropietario(propietario);
+                        ConcesionarioService.añadirPropietario(propietario);
                         System.out.println("Propietario registrado correctamente.");
                         break;
 
@@ -61,20 +61,20 @@ public class Principal {
                         double precio = MiEntradaSalida.leerDouble("Introduce el precio: ");
 
                         Coche coche = new Coche(matricula, marca, modelo, extras, precio, null);
-                        GestionBBDD.insertarCoche(coche);
+                        ConcesionarioService.insertarCoche(coche);
                         System.out.println("Coche agregado al concesionario correctamente.");
                         break;
 
                     case 5:
                         // Carga transaccional desde el fichero CSV configurado en config.properties
-                        GestionBBDD.importarCsv();
+                        ConcesionarioService.importarCsv();
                         System.out.println("Importacion del CSV realizada correctamente");
                         break;
 
 
                     case 6:
                         // Consulta de vehículos en stock del concesionario (id_propietario IS NULL)
-                        List<Coche> coches = GestionBBDD.listarCochesConcesionario();
+                        List<Coche> coches = ConcesionarioService.listarCochesConcesionario();
                         if (coches.isEmpty()) {
                             System.out.println("No hay coches en el concesionario");
                         } else {
@@ -85,7 +85,7 @@ public class Principal {
 
                     case 7:
                         // Consulta con INNER JOIN para mostrar los vehículos vendidos junto al DNI de su propietario
-                        List<String> cochesConPropietarios = GestionBBDD.listarCochesConPropietario();
+                        List<String> cochesConPropietarios = ConcesionarioService.listarCochesConPropietario();
                         if (cochesConPropietarios.isEmpty()) {
                             System.out.println("No hay coches con propietarios");
                         } else {
@@ -104,7 +104,7 @@ public class Principal {
 
                         Coche cocheModificado = new Coche(matriculaABuscar, nuevaMarca, nuevoModelo, nuevosExtras, nuevoPrecio);
 
-                        if (GestionBBDD.modificarCoche(cocheModificado)){
+                        if (ConcesionarioService.modificarCoche(cocheModificado)){
                             System.out.println("Coche modificado correctamente.");
                         } else {
                             System.out.println("No se encontro ningun coche con esa matricula");
@@ -115,7 +115,7 @@ public class Principal {
                     case 9:
                         // Eliminación de un vehículo por matrícula
                         String matABorrar = MiEntradaSalida.leerLinea("Introduce la matricula del coche a borrar: ");
-                        if (GestionBBDD.borrarCoche(matABorrar)){
+                        if (ConcesionarioService.borrarCoche(matABorrar)){
                             System.out.println("Coche borrado correctamente.");
                         } else {
                             System.out.println("No se encontro ningun coche con esa matricula");
@@ -128,14 +128,14 @@ public class Principal {
                         String matTraspaso = MiEntradaSalida.leerLinea("Introduce la matricula del coche a traspasar: ");
                         double monto = MiEntradaSalida.leerDouble("Introduce el monto economico de la operacion: ");
 
-                        GestionBBDD.realizarTraspaso(dniComprador, matTraspaso, monto);
+                        ConcesionarioService.realizarTraspaso(dniComprador, matTraspaso, monto);
                         System.out.println("Traspaso realizado y registrado correctamente.");
                         break;
 
                     case 11:
                         // Invocación del procedimiento almacenado sp_coches_por_marca mediante CallableStatement (solo MySQL)
                         String marcaBuscar = MiEntradaSalida.leerLinea("Introduce la marca a consultar: ");
-                        List<Coche> cochesMarca = GestionBBDD.ejecutarProcedimientoMarca(marcaBuscar);
+                        List<Coche> cochesMarca = ConcesionarioService.ejecutarProcedimientoMarca(marcaBuscar);
                         if (cochesMarca.isEmpty()){
                             System.out.println("No se encontraron coches con esa marca.");
                         } else {
@@ -146,19 +146,21 @@ public class Principal {
 
                     case 12:
                         //Generacion de un informe resumen
-                        GestionBBDD.generarInforme();
+                        ConcesionarioService.generarInforme();
                         System.out.println("Informe resumen generado correctamente.");
                         break;
 
                     case 13:
                         ConexionDB.cerrarConexion();
-                        activo = false;
+                        System.out.println("Saliendo del sistema...");
+                        usandoBaseDeDatos = false;
                         break;
                 }
             } catch (AppException | SQLException | MiEntradaSalidaException e) {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+        System.out.println("Sistema cerrado");
     }
 
 

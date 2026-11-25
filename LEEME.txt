@@ -1,0 +1,17 @@
+Conectores JDBC:
+Pros:
+- Te da control total sobre los fallos mediante rollback y commit si algo sale mal a mitad de una operación (como en los traspasos o leyendo el CSV).
+- Evita que te cuelen inyección SQL usando parámetros con interrogaciones en lugar de concatenar Strings.
+- Es estándar en Java y no necesitas instalar frameworks pesados ni librerías externas raras más allá del conector en Maven.
+
+Contras:
+- El código se vuelve muy largo porque tienes que controlar excepciones SQL en cada método y cerrar siempre los recursos.
+- Aunque el código Java sea el mismo, las consultas SQL cambian según el motor (por ejemplo, la sintaxis de las claves primarias).
+
+Embebida (SQLite):
+- Ideal para hacer pruebas rápidas o mover el proyecto en un pendrive porque no depende de ninguna red ni puerto.
+- Si intentan entrar varios usuarios a escribir a la vez se bloquea, y no tiene funciones avanzadas como rutinas en el propio motor.
+
+Servidor (MySQL):
+- Aguanta perfectamente múltiples conexiones simultáneas y permite gestionar permisos por roles.
+- Te obliga a configurar puertos, crear el esquema previamente desde fuera (como en HeidiSQL) y gestionar credenciales en un fichero aparte.
