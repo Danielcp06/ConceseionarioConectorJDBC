@@ -1,18 +1,30 @@
 package service;
 
+import com.sun.jdi.connect.spi.Connection;
 import exceptions.AppException;
-import model.Coche;
-import model.Equipamiento;
+import exceptions.ValorInvalidoException;
 import utils.PropertiesReader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConcesionarioService {
 
+
+    public static void Conector(int opcion) throws ValorInvalidoException, AppException {
+
+        String URL = PropertiesReader.getInstance().get("mysql.url");
+        String USER = PropertiesReader.getInstance().get("mysql.user");
+        String PASSWORD = PropertiesReader.getInstance().get("mysql.password");
+
+        if(opcion == 1){
+            try(Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+
+        }
+    }
 }

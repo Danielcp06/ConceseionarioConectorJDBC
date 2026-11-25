@@ -1,25 +1,31 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Coche {
-    private String dueño;
     private String matricula;
-    private String modelo;
     private String marca;
-    private List<Equipamiento> extra;
+    private String modelo;
+    private String extras;
+    private double precio;
+    //Uso Integer en lugar de int ya que la base de datos no admite que un int primitivo sea null
+    private Integer idPropietario;
 
-    public Coche(List<Equipamiento> extra) {
-        this.extra = new ArrayList<>();
+    //Constructor para altas nuevas antes de que la BBDD genere el ID autoincremental
+    public Coche(String matricula, String marca, String modelo, String extras, double precio) {
+        this.matricula = matricula;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.extras = extras;
+        this.precio = precio;
     }
 
-    public String getDueño() {
-        return dueño;
-    }
-
-    public void setDueño(String dueño) {
-        this.dueño = dueño;
+    //Constructor completo para reconstruir objetos leidos desde un ResultSet
+    public Coche(String matricula, String marca, String modelo, String extras, double precio, Integer idPropiertario) {
+        this.matricula = matricula;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.extras = extras;
+        this.precio = precio;
+        this.idPropietario = idPropiertario;
     }
 
     public String getMatricula() {
@@ -30,14 +36,6 @@ public class Coche {
         this.matricula = matricula;
     }
 
-    public String getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
     public String getMarca() {
         return marca;
     }
@@ -46,22 +44,47 @@ public class Coche {
         this.marca = marca;
     }
 
-    public List<Equipamiento> getExtra() {
-        return extra;
+    public String getModelo() {
+        return modelo;
     }
 
-    public void setExtra(List<Equipamiento> extra) {
-        this.extra = extra;
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public String getExtras() {
+        return extras;
+    }
+
+    public void setExtras(String extras) {
+        this.extras = extras;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public Integer getIdPropietario() {
+        return idPropietario;
+    }
+
+    public void setIdPropietario(Integer idPropietario) {
+        this.idPropietario = idPropietario;
     }
 
     @Override
     public String toString() {
         return "Coche{" +
-                "dueño='" + dueño + '\'' +
-                ", matricula='" + matricula + '\'' +
-                ", modelo='" + modelo + '\'' +
+                "matricula='" + matricula + '\'' +
                 ", marca='" + marca + '\'' +
-                ", extra=" + extra +
+                ", modelo='" + modelo + '\'' +
+                ", extras='" + extras + '\'' +
+                ", precio=" + precio +
+                ", idPropiertario=" + idPropietario +
                 '}';
     }
 }
